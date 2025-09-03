@@ -1,0 +1,26 @@
+<!doctype html>
+<notebook theme="glacier">
+  <title>Untitled</title>
+  <script id="3" type="module" pinned="">
+    data
+  </script>
+  <script id="1" type="application/sql" database="var:db" output="data">
+    SELECT *
+    FROM meatData
+  </script>
+  <script id="2" type="module" pinned="">
+    const db = DuckDBClient.of({
+      meatData: "https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=false"
+    });
+  </script>
+  <script id="7" type="module" pinned="">
+    dataEmpleo
+  </script>
+  <script id="5" type="application/sql" database="duckdb" output="dataEmpleo">
+    SELECT ano_trimestre, mes_central, count(*)
+    FROM read_parquet("ene-01-def.parquet")
+    GROUP BY ano_trimestre, mes_central
+
+
+  </script>
+</notebook>

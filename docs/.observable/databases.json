@@ -1,0 +1,20 @@
+{
+  "demo": {
+    "type": "snowflake",
+    "account": "tk421.us-east-1.aws",
+    "database": "demo",
+    "role": "public",
+    "schema": "public",
+    "username": "demo",
+    "warehouse": "demo",
+    "password": "opensesame"
+  },
+  {
+    "test": {
+        "type": "duckdb",
+        "path": "test.db"
+    }
+
+
+  
+}
