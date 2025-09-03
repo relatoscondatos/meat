@@ -19,7 +19,7 @@
     <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #0066cc;">
       <p style="margin: 0; font-size: 14px; color: #666;">
         <strong>About the modes:</strong>
-        <em>Subset</em> shows ${countries.length} curated countries for easier comparison.
+        <em>Subset</em> shows ${countriesSubset.length} curated countries for easier comparison.
         <em>All countries</em> provides access to the complete dataset with ${allCountries.length} countries.
       </p>
     </div>
@@ -32,7 +32,7 @@
   </script>
   <script id="41" type="module">
     const selectReference = view(Inputs.select(
-        selectCountryMode === "All countries" ? allCountries : _.chain(countries).concat("Chile").uniq().sort().value(),
+        countries,
         {
             label: "Reference country (shown as thick line)",
             value: "Chile"
@@ -48,7 +48,7 @@
   </script>
   <script id="4" type="module">
     const selectCountry = view(Inputs.select(
-        selectCountryMode === "All countries" ? allCountries : _.chain(countries).uniq().sort().value(),
+        countries,
         {
             label: "Additional countries to compare",
             multiple: true,
@@ -213,6 +213,9 @@
       });
     }
   </script>
+  <script id="50" type="module" pinned="">
+    const countries = selectCountryMode == "All countries" ? allCountries : _.chain(countriesSubset).uniq().sort().value()
+  </script>
   <script id="43" type="module">
     const allCountries = _.chain(data)
       .map(d => d.Entity)
@@ -221,7 +224,7 @@
       .value();
   </script>
   <script id="15" type="module">
-    const countries = [
+    const countriesSubset = [
       "Argentina",
       "Australia",
       "Bangladesh",
@@ -229,6 +232,7 @@
       "Bolivia",
       "Brazil",
       "Canada",
+      "Chile",
       "China",
       "Croatia",
       "Denmark",
