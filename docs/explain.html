@@ -176,6 +176,9 @@
 
     Chile's journey from 32.9 kg to 92.4 kg per capita represents not just economic progress, but participation in a global transformation of how humanity feeds itself. Each country's unique trajectory adds a chapter to this larger story of changing diets in a changing world.
   </script>
+  <script id="81" type="module" pinned="">
+    `${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].titleShort} (${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].unit})`
+  </script>
   <script id="6" type="module">
     function meatConsumptionChart(options) {
       const countries = (options && options.countries) || ["Chile"];
@@ -215,18 +218,23 @@
         title:metaData.chart.title,
         subtitle:metaData.chart.subtitle,
         caption: `Source: ${metaData.chart.citation}`,
-
         color: { legend: true, domain: _.concat("Chile", otrosPaises) },
         style: { fontSize: 14 },
         width,
-        height: 600,
         marginRight: 100,
-        marginTop:30,
-        //title:"Suministro promedio total de carne per cápita medido en kilogramos por año",
-        x: { label: "year" },
-        y: { label: metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].unit, grid: true },
+        marginTop: 30,
+        marginBottom: 50,
+        x: {
+          label: `${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].titleShort} (${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].unit})`,
+          domain: [1960, 2025]
+        },
+        y: {
+          label: `${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].titleShort} (${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].unit})`,
+          domain: [0, maxValue * 1.1], grid:true
+        },
         marks: [
           Plot.ruleY([0]),
+
           Plot.ruleX(_.chain(dataHighlight).map(d => d.Year).uniq().value(), {
             stroke: "lightgrey",
           }),
@@ -236,25 +244,20 @@
             text: d => d,
             dy:-10
           }),
-          Plot.lineY(dataPlot, {
+          Plot.line(dataPlot, {
             x: "Year",
             y: "consumption",
             stroke: "Entity",
-            strokeWidth: (d) => (d.Entity == "Chile" ? 3 : 2), tip:true
+            strokeWidth: (d) => (d.Entity === "Chile" ? 3 : 2),
+            tip:true,
+            title: d =>  `${d.Entity} (${d.Year})\n${d3.format(".1f")(d.consumption)} kg per capita`,
           }),
-          Plot.text(
-            dataPlot,
-            Plot.selectLast({
-              x: "Year",
-              y: "consumption",
-              z: "Entity",
-              fill: "Entity",
-              text: "Entity",
-              textAnchor: "start",
-              //sort: { x: "Year" }, // <-- ensure “last” = rightmost
-              dx: 5
-            })
-          ),
+          Plot.dot(dataHighlight, {
+            x: "Year",
+            y: "consumption",
+            fill: "Entity",
+            r: 4,
+          }),
           Plot.dot(dataHighlight, {
             x: "Year",
             y: "consumption",
@@ -265,9 +268,8 @@
             y: "consumption",
             fill: "black",
             dy:15,
-            text: d=> `${d3.format(".1f")(d.consumption)}`
+            text: d=> `${d3.format(".1f")(d.consumption)} kg`
           }),
-
         ]
       });
     }
