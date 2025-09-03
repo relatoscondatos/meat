@@ -4,8 +4,11 @@
   <script id="1" type="text/markdown">
     # ${metaData.chart.title} (Explain)
   </script>
+  <script id="73" type="text/markdown">
+    This analysis explores the fascinating patterns behind global meat supply per capita, revealing how economic development, cultural values, and changing preferences shape what we eat. Using Chile as our reference point, we'll uncover four distinct patterns that countries follow in their dietary transitions - from steady consumers to cultural constants, and from economic climbers to surprising exceptions that challenge our assumptions about the relationship between wealth and meat consumption.
+  </script>
   <script id="34" type="text/markdown">
-    *${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].citationShort}*
+    Data surce: *${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].citationShort}*
   </script>
   <script id="33" type="text/markdown">
     ${metaData.chart.note}
@@ -14,7 +17,9 @@
     ## Reference country: Chile
   </script>
   <script id="35" type="text/markdown">
-    In 1988 Chile had a supply of 32.9 kg (per capita per year).  From then onwards, there has been an upwards trend leading to 92.4 kg in 2022
+    Chile's meat consumption journey tells a remarkable story of economic transformation. In 1988, Chileans consumed just 32.9 kg of meat per person per year. Over the following three decades, this figure nearly tripled to 92.4 kg by 2022 - a dramatic increase that mirrors the country's economic development and rising living standards.
+
+    This steady upward trajectory makes Chile an ideal reference point for understanding global dietary transitions. But as we'll see, not all countries follow this same path - some maintain steady high consumption, others peak and decline, while some remain constant despite economic growth.
   </script>
   <script id="18" type="module">
     meatConsumptionChart({ countries: [], highlightYears:[1988, 2022] })
@@ -23,40 +28,65 @@
     ## Meat Supply vs GDP per Capita
   </script>
   <script id="43" type="text/markdown">
-    In general we can observe an association between income (GDP per Capita) and the amount od meat supply, but tere are some exeptions
+    The relationship between wealth and meat consumption reveals a compelling global story. As countries grow richer, their citizens generally consume more meat - but this seemingly straightforward pattern hides fascinating exceptions that challenge our assumptions about diet, culture, and development.
+
+    While the overall trend shows higher GDP per capita correlating with increased meat supply, the scatter reveals intriguing outliers: wealthy nations that consume surprisingly little, developing countries that punch above their economic weight, and oil-rich states with consumption patterns that defy simple economic logic. These exceptions tell us that money alone doesn't determine what's on our plates.
   </script>
   <script id="39" type="module">
     meatConsumptionScatterPlot({countries:countries})
   </script>
-  <script id="21" type="text/markdown">
-    ## Countries that have kept a high level of meat supply over time
+  <script id="54" type="text/markdown">
+    ## The Global Meat Revolution: Four Distinct Patterns
+
+    The evolution of meat supply per capita reveals fascinating patterns that go beyond simple economic development. By examining different countries, we can identify four distinct trajectories that tell the story of changing diets, cultural values, and economic transitions worldwide.
+  </script>
+  <script id="55" type="text/markdown">
+    ### Pattern 1: The Steady Consumers
+    Countries like Australia represent the "steady consumers" - nations that established high meat consumption levels early and maintained them consistently. This pattern often reflects:
+    - Established livestock industries
+    - Cultural dietary preferences
+    - Stable economic conditions
   </script>
   <script id="45" type="text/markdown">
-    Some countries report a high level of meat consumtion per capita which does not seem to be associated to the increase of income over time.  For example: Australia.
+    Some countries report high levels of meat consumption per capita that do not seem to be associated with increases in income over time. For example: Australia.
   </script>
   <script id="20" type="module">
     meatConsumptionChart({ countries: ["Australia"] })
   </script>
-  <script id="25" type="text/markdown">
-    ## High income countries that show recent reduction in meat supply
+  <script id="56" type="text/markdown">
+    ### Pattern 2: The Peak and Decline
+    Germany exemplifies a fascinating trend among wealthy nations: reaching peak meat consumption and then deliberately reducing it. This "peak and decline" pattern suggests:
+    - Changing health consciousness
+    - Environmental awareness
+    - Dietary diversification in affluent societies
+
+    Notice how Germany's trajectory intersects with Chile's - a symbolic moment where traditional high-consumption countries meet emerging economies.
   </script>
-  <script id="46" type="text/markdown" pinned="">
-    Some countries had a very high evel of meet consumption but have been decreasing this indicator in recent years. This does not seem to be related to income and is probably a changee in eating behaviors.  Germany used to have much higer levels comparde to Chile in the 80s, but has gone below Chile on recent years
+  <script id="46" type="text/markdown">
+    Some countries had very high levels of meat consumption but have been decreasing this indicator in recent years. This does not seem to be related to income and is probably a change in eating behaviors. Germany used to have much higher levels compared to Chile in the 80s, but has fallen below Chile in recent years.
   </script>
   <script id="24" type="module">
     meatConsumptionChart({ countries: ["Germany"], highlightYears:[1988, 2022] })
   </script>
-  <script id="47" type="text/markdown" pinned="">
-    ## Countries with a permanent low level of meat consumption
+  <script id="57" type="text/markdown">
+    ### Pattern 3: The Cultural Constants
+    India demonstrates how cultural and religious factors can override economic development in determining dietary patterns. Despite economic growth, meat supply remains consistently low, showing that:
+    - Cultural values can be stronger than income effects
+    - Dietary patterns reflect deep-rooted traditions
+    - Economic development doesn't always mean dietary westernization
   </script>
   <script id="48" type="text/markdown" pinned="">
-    Some countries, like India, show very low levels of meat supply per person. This is probably explained by cultural reasons and is not associated to income.
+    Some countries, like India, show very low levels of meat supply per person. This is probably explained by cultural reasons and is not associated with income.
   </script>
   <script id="26" type="module">
     meatConsumptionChart({ countries: ["India"] })
   </script>
-  <script id="49" type="text/markdown">
-    ## Similar trands to Chile
+  <script id="58" type="text/markdown">
+    ### Pattern 4: The Economic Climbers
+    Chile, China, and many emerging economies show the classic "economic climber" pattern - steady increases in meat consumption that closely track economic development. This pattern reveals:
+    - The protein transition accompanying economic growth
+    - Rising middle-class aspirations
+    - Urbanization effects on dietary choices
   </script>
   <script id="50" type="text/markdown">
     Several countries - like China - show a similar trend to Chile, with a progressive growth over time.
@@ -64,27 +94,87 @@
   <script id="28" type="module">
     meatConsumptionChart({ countries: ["China"] })
   </script>
-  <script id="52" type="text/markdown" pinned="">
+  <script id="59" type="text/markdown">
+    ## The Surprising Cases
+
+    Beyond these main patterns, some countries defy expectations and reveal the complexity of global dietary transitions.
+  </script>
+  <script id="52" type="text/markdown">
     ## Case of Bolivia
   </script>
-  <script id="53" type="text/markdown" pinned="">
-    It is surprising that Bolivia, with much lower income than Chile, shows only a slightly lower levels of meat supply than Chile
+  <script id="53" type="text/markdown">
+    Bolivia presents a fascinating paradox in the income-meat consumption relationship. Despite having significantly lower GDP per capita than Chile, Bolivia maintains meat supply levels that are only slightly below Chile's - a pattern that challenges conventional assumptions about the relationship between economic development and dietary transitions.
+
+    Several factors may explain this surprising pattern:
+
+    **Geographic and Agricultural Advantages**: Bolivia's diverse geography includes extensive lowland regions suitable for cattle ranching, particularly in the Santa Cruz department, which has become a major beef production center.
+
+    **Regional Trade Dynamics**: Bolivia's position within South America allows it to benefit from regional meat trade networks and potentially lower transportation costs for livestock products.
+
+    **Cultural and Dietary Traditions**: Like many South American countries, Bolivia has strong cultural traditions around meat consumption, particularly beef, which may maintain demand regardless of income constraints.
+
+    **Local Production vs. Import Dependence**: Unlike countries that rely heavily on meat imports, Bolivia's domestic production capabilities may provide more affordable access to meat products for its population.
+
+    This case illustrates that the global meat transition is not simply a story of "richer countries eat more meat." Instead, it reveals how local production systems, cultural preferences, and regional food networks can create unexpected patterns that defy simple economic explanations.
   </script>
   <script id="27" type="module">
     meatConsumptionChart({ countries: ["Bolivia"] })
   </script>
-  <script id="22" type="module">
-    meatConsumptionChart({ countries: ["Argentina$"] })
+  <script id="65" type="text/markdown" pinned="">
+    ## Case of Kuwait
   </script>
-  <script id="23" type="module">
-    meatConsumptionChart({ countries: selectCountry, highlightYears:[1990,2022] })
-  </script>
-  <script id="4" type="module">
-    const selectCountry = view(Inputs.select(_.chain(countries).uniq().sort().value(), {
-        label: "Select one",
-        multiple: true
-      }));
+  <script id="67" type="text/markdown">
+    Kuwait presents a fascinating case of how external economic shocks can dramatically impact dietary patterns, even in wealthy oil-rich nations. The country experienced a significant peak in meat consumption around 2005, followed by a sharp decline after 2009 - likely reflecting the global financial crisis and its impact on food imports and economic conditions.
 
+    This pattern illustrates several important points:
+    - Even wealthy nations are not immune to global economic disruptions
+    - Import-dependent food systems can be vulnerable to external shocks
+    - Recovery patterns can take years to establish
+
+    Kuwait's recent recovery with an upward trend in meat consumption suggests economic stabilization and renewed prosperity, demonstrating the resilience of dietary preferences when economic conditions improve. This U-shaped trajectory - peak, decline, recovery - represents a distinct pattern that differs from the steady growth seen in emerging economies or the plateau patterns of established wealthy nations.
+  </script>
+  <script id="66" type="module">
+    meatConsumptionChart({ countries: ["Kuwait"] })
+  </script>
+  <script id="69" type="text/markdown" pinned="">
+    ## Case of Mongolia
+  </script>
+  <script id="70" type="text/markdown">
+    Mongolia presents a fascinating U-shaped trajectory in meat consumption. The country experienced a prolonged decline in meat supply per capita for many years, likely reflecting economic transitions and challenges. However, this trend has dramatically reversed in recent years, with Mongolia now showing a sharp upward trajectory that has propelled it to exceptionally high consumption levels - among the highest globally. This remarkable turnaround may reflect Mongolia's economic recovery, its traditional pastoral culture reasserting itself, or improved access to livestock products in this historically nomadic society.
+  </script>
+  <script id="72" type="module">
+    meatConsumptionChart({ countries: ["Mongolia"] })
+  </script>
+  <script id="74" type="text/markdown" pinned="">
+    ## Case of Myanmar
+  </script>
+  <script id="78" type="text/markdown">
+    Myanmar presents a compelling case of how political instability and conflict can dramatically disrupt dietary patterns. The country showed a steady increase in meat supply per capita until around 2020, when it experienced a sharp decline. This dramatic drop coincides with the military coup in February 2021 and the subsequent civil unrest, economic disruption, and internal conflicts that have plagued the country.
+
+    This pattern illustrates how:
+
+    Political stability is crucial for maintaining food supply chains
+    Economic disruption can quickly reverse dietary improvements
+    Conflict affects not just immediate food security but also longer-term nutritional transitions
+    Myanmar’s case serves as a stark reminder that the path toward improved nutrition is not always linear and can be severely disrupted by political and social upheaval.
+  </script>
+  <script id="75" type="module">
+    meatConsumptionChart({ countries: ["Myanmar"] })
+  </script>
+  <script id="64" type="text/markdown">
+    ## The Bigger Picture: What These Patterns Tell Us
+
+    These diverse trajectories reveal that meat consumption is not simply a function of income. Instead, it's shaped by a complex interplay of:
+
+    1. **Economic development** - providing the means for dietary change
+    2. **Cultural values** - determining what changes are desired or acceptable
+    3. **Food system infrastructure** - enabling or constraining access
+    4. **Environmental awareness** - increasingly influencing choices in wealthy nations
+    5. **Policy and trade** - affecting availability and prices
+
+    The story of global meat supply is ultimately a story about how societies balance tradition and change, aspiration and constraint, individual choice and collective consequence. As we face growing concerns about sustainability and health, understanding these patterns becomes crucial for predicting and shaping future dietary transitions.
+
+    Chile's journey from 32.9 kg to 92.4 kg per capita represents not just economic progress, but participation in a global transformation of how humanity feeds itself. Each country's unique trajectory adds a chapter to this larger story of changing diets in a changing world.
   </script>
   <script id="6" type="module">
     function meatConsumptionChart(options) {
@@ -150,7 +240,7 @@
             x: "Year",
             y: "consumption",
             stroke: "Entity",
-            strokeWidth: (d) => (d.Entity == "Chile" ? 3 : 2)
+            strokeWidth: (d) => (d.Entity == "Chile" ? 3 : 2), tip:true
           }),
           Plot.text(
             dataPlot,
@@ -349,5 +439,10 @@
   </script>
   <script id="40" type="module">
     const metaDataMeatGDP = d3.json("https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.metadata.json?v=1&csvType=full&useColumnShortNames=true")
+  </script>
+  <script id="79" type="text/markdown">
+    ---
+
+    *Author: [Ernesto Laval](https://twitter.com/elaval) | LinkedIn: [ernestolaval](https://linkedin.com/in/ernestolaval)*
   </script>
 </notebook>
