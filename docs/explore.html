@@ -123,7 +123,10 @@
             x: "Year",
             y: "consumption",
             stroke: "Entity",
-            strokeWidth: (d) => (d.Entity == reference ? 3 : 2)
+            strokeWidth: (d) => (d.Entity == reference ? 3 : 2),
+            tip:true,
+            title: d =>  `${d.Entity} (${d.Year})\n${d3.format(".1f")(d.consumption)} kg per capita`,
+
           }),
           Plot.text(
             dataPlot,
