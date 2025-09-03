@@ -1,0 +1,332 @@
+<!doctype html>
+<notebook theme="glacier">
+  <title>Meat supply per person (Explore)</title>
+  <script id="1" type="text/markdown">
+    # ${metaData.chart.title} (Explore)
+  </script>
+  <script id="34" type="text/markdown">
+    *${metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].citationShort}*
+  </script>
+  <script id="33" type="text/markdown">
+    ${metaData.chart.note}
+  </script>
+  <script id="47" type="text/markdown">
+    ## Chart Controls
+
+    Configure the visualization below by selecting countries to compare and years to highlight.
+  </script>
+  <script id="48" type="text/html">
+    <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin: 16px 0; border-left: 4px solid #0066cc;">
+      <p style="margin: 0; font-size: 14px; color: #666;">
+        <strong>About the modes:</strong>
+        <em>Subset</em> shows ${countries.length} curated countries for easier comparison.
+        <em>All countries</em> provides access to the complete dataset with ${allCountries.length} countries.
+      </p>
+    </div>
+  </script>
+  <script id="49" type="module">
+    const selectCountryMode = view(Inputs.radio(["Subset of countries", "All countries"], {
+      label: "Country Selection Mode",
+      value: "Subset of countries"
+    }));
+  </script>
+  <script id="41" type="module">
+    const selectReference = view(Inputs.select(
+        selectCountryMode === "All countries" ? allCountries : _.chain(countries).concat("Chile").uniq().sort().value(),
+        {
+            label: "Reference country (shown as thick line)",
+            value: "Chile"
+        }
+    ));
+  </script>
+  <script id="42" type="module">
+    const selectHighlightYears = view(Inputs.select([1961, 1970, 1980, 1990, 2000, 2010, 2020, 2022], {
+        label: "Years to highlight with dots",
+        multiple: true,
+        value: [1990, 2022]
+      }));
+  </script>
+  <script id="4" type="module">
+    const selectCountry = view(Inputs.select(
+        selectCountryMode === "All countries" ? allCountries : _.chain(countries).uniq().sort().value(),
+        {
+            label: "Additional countries to compare",
+            multiple: true,
+            value: selectCountryMode === "All countries" ? [] : undefined
+        }
+    ));
+  </script>
+  <script id="23" type="module">
+    meatConsumptionChart({ reference: selectReference, countries: selectCountry, highlightYears: selectHighlightYears })
+  </script>
+  <script id="6" type="module">
+    function meatConsumptionChart(options) {
+      const reference = (options && options.reference) || "Chile";
+      const countries = (options && options.countries) || [];
+      const highlightYears = (options && options.highlightYears) || [];
+
+      const filtroPaises = new RegExp(
+        _.chain(
+          _.concat(
+            reference,
+            countries.map((d) => `${d}$`)
+          )
+        )
+          .map((d) => d)
+          .join("|")
+      );
+
+      const dataPlot = _.chain(data)
+        .filter((d) => d.Entity.match(filtroPaises) && d.consumption)
+        .sortBy((d) => d.Year)
+        .value();
+
+      const dataHighlight = _.chain(data)
+        .filter((d) => d.Entity.match(filtroPaises) && d.consumption && highlightYears.includes(d.Year))
+        .sortBy((d) => d.Year)
+        .value();
+
+      const maxValue = _.chain(dataPlot).map(d => d.consumption).max().value()
+
+      const otrosPaises = _.chain(dataPlot)
+        .map((d) => d.Entity)
+        .uniq()
+        .filter((d) => d !== reference)
+        .sort()
+        .value();
+
+      return Plot.plot({
+        title:metaData.chart.title,
+        subtitle:metaData.chart.subtitle,
+        caption: `Source: ${metaData.chart.citation}`,
+
+        color: { legend: true, domain: _.concat(reference, otrosPaises) },
+        style: { fontSize: 14 },
+        width,
+        height: 600,
+        marginRight: 100,
+        marginTop:30,
+        x: { label: "year" },
+        y: { label: metaData.columns["Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita"].unit, grid: true },
+        marks: [
+          Plot.ruleY([0]),
+          Plot.ruleX(_.chain(dataHighlight).map(d => d.Year).uniq().value(), {
+            stroke: "lightgrey",
+          }),
+          Plot.text(_.chain(dataHighlight).map(d => d.Year).uniq().value(), {
+            x: d => d,
+            y: d => maxValue,
+            text: d => d,
+            dy:-10
+          }),
+          Plot.lineY(dataPlot, {
+            x: "Year",
+            y: "consumption",
+            stroke: "Entity",
+            strokeWidth: (d) => (d.Entity == reference ? 3 : 2)
+          }),
+          Plot.text(
+            dataPlot,
+            Plot.selectLast({
+              x: "Year",
+              y: "consumption",
+              z: "Entity",
+              fill: "Entity",
+              text: "Entity",
+              textAnchor: "start",
+              dx: 5
+            })
+          ),
+          Plot.dot(dataHighlight, {
+            x: "Year",
+            y: "consumption",
+            fill: "Entity",
+          }),
+          Plot.text(dataHighlight, {
+            x: "Year",
+            y: "consumption",
+            fill: "black",
+            dy:15,
+            text: d=> `${d3.format(".1f")(d.consumption)}`
+          }),
+
+        ]
+      });
+    }
+  </script>
+  <script id="38" type="module">
+    function meatConsumptionScatterPlot(options) {
+      const countries = (options && options.countries) || ["Chile"];
+
+      const filtroPaises = new RegExp(
+        _.chain(_.concat("Chile", countries))
+          .map((d) => d)
+          .join("|")
+      );
+
+      const dataPlot = _.chain(data)
+        .filter(
+          (d) => d.Entity.match(filtroPaises) && d.consumption && d.Year == 2022
+        )
+        .sortBy((d) => d.Year)
+        .value();
+
+      const otrosPaises = _.chain(dataPlot)
+        .map((d) => d.Entity)
+        .uniq()
+        .filter((d) => !d.match(/Chile/))
+        .sort()
+        .value();
+
+      return Plot.plot({
+        color: { legend: true /*domain: _.concat("Chile", otrosPaises) */ },
+        style: { fontSize: 14 },
+        width,
+        marginRight: 100,
+        marginTop:30,
+        marginBottom:50,
+        title: metaDataMeatGDP.chart.title,
+        subtitle: `${metaDataMeatGDP.chart.subtitle}`,
+        caption: `Source: ${metaDataMeatGDP.chart.citation}`,
+        x: { label:`${metaDataMeatGDP.columns["ny_gdp_pcap_pp_kd"].titleShort} (${metaDataMeatGDP.columns["ny_gdp_pcap_pp_kd"].unit})`, type: "log" },
+          y: { label: `${metaDataMeatGDP.columns["meat__total__00002943__food_available_for_consumption__0645pc__kilograms_per_year_per_capita"].titleShort} (${metaDataMeatGDP.columns["meat__total__00002943__food_available_for_consumption__0645pc__kilograms_per_year_per_capita"].unit})`, grid: true },
+        marks: [
+          Plot.ruleY([0]),
+          Plot.dot(dataPlot, {
+            x: "gptpc",
+            y: "consumption",
+            fill: (d) => (d.Entity == "Chile" ? "blue" : "lightgrey"),
+            fillOpacity:0.5,
+            r: 5
+            //strokeWidth: (d) => (d.Entity == "Chile" ? 3 : 2)
+          }),
+          Plot.text(dataPlot, {
+            x: "gptpc",
+            y: "consumption",
+            //fill: "Entity",
+            text: "Entity",
+            fontSize:10,
+            dy: 10
+          })
+
+        ]
+      });
+    }
+  </script>
+  <script id="43" type="module">
+    const allCountries = _.chain(data)
+      .map(d => d.Entity)
+      .uniq()
+      .sort()
+      .value();
+  </script>
+  <script id="15" type="module">
+    const countries = [
+      "Argentina",
+      "Australia",
+      "Bangladesh",
+      "Belarus",
+      "Bolivia",
+      "Brazil",
+      "Canada",
+      "China",
+      "Croatia",
+      "Denmark",
+      "Ecuador",
+      "Egypt",
+      "El Salvador",
+      "Colombia",
+      "Costa Rica",
+      "Finland",
+      "France",
+      "Germany",
+      "Greece",
+      "Guatemala",
+      "Haiti",
+      "Honduras",
+      "Hong Kong",
+      "Hungary",
+      "Iceland",
+      "India",
+      "Ireland",
+      "Indonesia",
+      "Iran",
+      "Iraq",
+      "Israel",
+      "Italy",
+      "Jamaica",
+      "Japan",
+      "Jordan",
+      "Kenya",
+      "Kuwait",
+      "Luxembourg",
+      "Madagascar",
+      "Malaysia",
+      "Malta",
+      "Mexico",
+      "Mongolia",
+      "Morocco",
+      "Mozambique",
+      "Myanmar",
+      "Nepal",
+      "Netherlands",
+      "New Zealand",
+      "Nicaragua",
+      "North Korea",
+      "Norway",
+      "Pakistan",
+      "Paraguay",
+      "Peru",
+      "Panama",
+      "Philippines",
+      "Poland",
+      "Portugal",
+      "Russia",
+      "Rwanda",
+      "Saudi Arabia",
+      "South Africa",
+      "Spain",
+      "South Korea",
+      "Sweden",
+      "Switzerland",
+      "Taiwan",
+      "Thailand",
+      "Turkey",
+      "Ukraine",
+      "United Arab Emirates",
+      "United Kingdom",
+      "United States",
+      "Uruguay",
+      "Venezuela",
+      "Vietnam",
+      "Zimbabwe",
+      "Austria"
+    ]
+  </script>
+  <script id="17" type="module">
+    const query = `
+    WITH regiones as (SELECT Entity, "World regions according to OWID" as region FROM meatData WHERE NOT "World regions according to OWID" ISNULL)
+
+
+    SELECT meatData.Entity, Code, meatData.Year,  "Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita" as consumption, "GDP per capita, PPP (constant 2021 international $)" as gptpc,
+      regiones.region
+
+    FROM meatData
+    INNER JOIN regiones ON
+    meatData.Entity = regiones.Entity
+    `
+
+    const data = [... await db.query(query)]
+  </script>
+  <script id="11" type="module">
+    const db = DuckDBClient.of({
+      meatData: "https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=false"
+    });
+  </script>
+  <script id="29" type="module">
+    const metaData = d3.json("https://ourworldindata.org/grapher/meat-supply-per-person.metadata.json?v=1&csvType=full&useColumnShortNames=false")
+  </script>
+  <script id="40" type="module">
+    const metaDataMeatGDP = d3.json("https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.metadata.json?v=1&csvType=full&useColumnShortNames=true")
+  </script>
+</notebook>

@@ -1,0 +1,153 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Hello, world!</title>
+  <script id="1" type="text/markdown">
+    # Hello, world!
+  </script>
+  <script id="4" type="module" pinned="">
+    dataRawTotal
+  </script>
+  <script id="2" type="module" pinned="">
+    const dataRawTotal = d3.csv(
+      "https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=false",
+      d3.autoType
+    )
+  </script>
+  <script id="3" type="module" pinned="">
+    const metadata = await d3.json("https://ourworldindata.org/grapher/meat-supply-per-person.metadata.json?v=1&csvType=full&useColumnShortNames=true")
+    display(metadata)
+  </script>
+  <script id="5" type="application/sql" pinned="">
+    //import {DuckDBClient} from "npm:@observablehq/duckdb";
+
+    // Example query - replace with your actual SQL
+    const result = await db.sql`WITH regiones as (SELECT Entity, "World regions according to OWID" as region FROM dataRawTotal WHERE NOT "World regions according to OWID" ISNULL)
+
+
+    SELECT dataRawTotal.Entity, Code, dataRawTotal.Year,  "Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita" as consumption, "GDP per capita, PPP (constant 2021 international $)" as gptpc,
+      regiones.region
+
+    FROM dataRawTotal
+    INNER JOIN regiones ON
+    dataRawTotal.Entity = regiones.Entity`;
+    display(result);
+  </script>
+  <script id="8" type="module" pinned="">
+    db.query(`SELECT * from "dataRawTotal"`)
+  </script>
+  <script id="14" type="module" pinned="">
+    viewof selectCountry = {
+
+      return Inputs.select(_.chain(countries).uniq().sort().value(), {
+        label: "Select one",
+        multiple: true
+      });
+    }
+  </script>
+  <script id="12" type="module" pinned="">
+    const countries = [
+      "Argentina",
+      "Australia",
+      "Bangladesh",
+      "Belarus",
+      "Bolivia",
+      "Brazil",
+      "Canada",
+      "China",
+      "Croatia",
+      "Denmark",
+      "Ecuador",
+      "Egypt",
+      "El Salvador",
+      "Colombia",
+      "Costa Rica",
+      "Finland",
+      "France",
+      "Germany",
+      "Greece",
+      "Guatemala",
+      "Haiti",
+      "Honduras",
+      "Hong Kong",
+      "Hungary",
+      "Iceland",
+      "India",
+      "Ireland",
+      "Indonesia",
+      "Iran",
+      "Iraq",
+      "Israel",
+      "Italy",
+      "Jamaica",
+      "Japan",
+      "Jordan",
+      "Kenya",
+      "Kuwait",
+      "Luxembourg",
+      "Madagascar",
+      "Malaysia",
+      "Malta",
+      "Mexico",
+      "Mongolia",
+      "Morocco",
+      "Mozambique",
+      "Myanmar",
+      "Nepal",
+      "Netherlands",
+      "New Zealand",
+      "Nicaragua",
+      "North Korea",
+      "Norway",
+      "Pakistan",
+      "Paraguay",
+      "Peru",
+      "Panama",
+      "Philippines",
+      "Poland",
+      "Portugal",
+      "Russia",
+      "Rwanda",
+      "Saudi Arabia",
+      "South Africa",
+      "Spain",
+      "South Korea",
+      "Sweden",
+      "Switzerland",
+      "Taiwan",
+      "Thailand",
+      "Turkey",
+      "Ukraine",
+      "United Arab Emirates",
+      "United Kingdom",
+      "United States",
+      "Uruguay",
+      "Venezuela",
+      "Vietnam",
+      "Zimbabwe",
+      "Austria"
+    ]
+  </script>
+  <script id="10" type="module" pinned="">
+    const data = [...misdatos]
+  </script>
+  <script id="15" type="module" pinned="">
+    viewof selectCountry = {
+
+      return Inputs.select(_.chain(countries).uniq().sort().value(), {
+        label: "Select one",
+        multiple: true
+      });
+    }
+  </script>
+  <script id="9" type="application/sql" pinned="">
+    SELECT *
+    FROM db.dataRawTotal
+  </script>
+  <script id="7" type="module" pinned="">
+    const db = DuckDBClient.of({
+      employment: `https://raw.githubusercontent.com/elaval/datos-empleo-chile/refs/heads/main/data/processed/agregados/integrado/ene_trimestre_totales.csv`,
+      dataRawTotal: "https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=false",
+    });
+
+  </script>
+</notebook>

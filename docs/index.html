@@ -1,0 +1,197 @@
+<!doctype html>
+<notebook theme="air">
+  <title>Meat Supply</title>
+  <script id="1" type="text/markdown">
+    # Meat Supply
+  </script>
+  <script id="19" type="text/markdown">
+    ## Chile
+  </script>
+  <script id="18" type="module">
+    meatConsumptionChart({ countries: [] })
+  </script>
+  <script id="21" type="text/markdown">
+    ## Paises con niveles altos
+  </script>
+  <script id="20" type="module">
+    meatConsumptionChart({ countries: ["Argentina$"] })
+  </script>
+  <script id="22" type="module" pinned="">
+    meatConsumptionChart({ countries: ["Argentina$"] })
+  </script>
+  <script id="23" type="module">
+    meatConsumptionChart({ countries: selectCountry })
+  </script>
+  <script id="4" type="module">
+    const selectCountry = view(Inputs.select(_.chain(countries).uniq().sort().value(), {
+        label: "Select one",
+        multiple: true
+      }));
+
+  </script>
+  <script id="6" type="module">
+    function meatConsumptionChart(options) {
+      const countries = (options && options.countries) || ["Chile"];
+
+      const filtroPaises = new RegExp(
+        _.chain(
+          _.concat(
+            "Chile",
+            countries.map((d) => `${d}$`)
+          )
+        )
+          .map((d) => d)
+          .join("|")
+      );
+
+      const dataPlot = _.chain(data)
+        .filter((d) => d.Entity.match(filtroPaises) && d.consumption)
+        .sortBy((d) => d.Year)
+        .value();
+
+      const otrosPaises = _.chain(dataPlot)
+        .map((d) => d.Entity)
+        .uniq()
+        .filter((d) => !d.match(/Chile/))
+        .sort()
+        .value();
+
+      return Plot.plot({
+        color: { legend: true, domain: _.concat("Chile", otrosPaises) },
+        style: { fontSize: 14 },
+        width,
+        height: 600,
+        marginRight: 100,
+        title:
+          "Suministro promedio total de carne per cápita medido en kilogramos por año",
+        x: { label: "Año" },
+        y: { label: "kg/año", grid: true },
+        marks: [
+          Plot.ruleY([0]),
+          Plot.lineY(dataPlot, {
+            x: "Year",
+            y: "consumption",
+            stroke: "Entity",
+            strokeWidth: (d) => (d.Entity == "Chile" ? 3 : 2)
+          }),
+          Plot.text(
+            dataPlot,
+            Plot.selectLast({
+              x: "Year",
+              y: "consumption",
+              z: "Entity",
+              fill: "Entity",
+              text: "Entity",
+              textAnchor: "start",
+              //sort: { x: "Year" }, // <-- ensure “last” = rightmost
+              dx: 5
+            })
+          )
+        ]
+      });
+    }
+  </script>
+  <script id="15" type="module" pinned="">
+    const countries = [
+      "Argentina",
+      "Australia",
+      "Bangladesh",
+      "Belarus",
+      "Bolivia",
+      "Brazil",
+      "Canada",
+      "China",
+      "Croatia",
+      "Denmark",
+      "Ecuador",
+      "Egypt",
+      "El Salvador",
+      "Colombia",
+      "Costa Rica",
+      "Finland",
+      "France",
+      "Germany",
+      "Greece",
+      "Guatemala",
+      "Haiti",
+      "Honduras",
+      "Hong Kong",
+      "Hungary",
+      "Iceland",
+      "India",
+      "Ireland",
+      "Indonesia",
+      "Iran",
+      "Iraq",
+      "Israel",
+      "Italy",
+      "Jamaica",
+      "Japan",
+      "Jordan",
+      "Kenya",
+      "Kuwait",
+      "Luxembourg",
+      "Madagascar",
+      "Malaysia",
+      "Malta",
+      "Mexico",
+      "Mongolia",
+      "Morocco",
+      "Mozambique",
+      "Myanmar",
+      "Nepal",
+      "Netherlands",
+      "New Zealand",
+      "Nicaragua",
+      "North Korea",
+      "Norway",
+      "Pakistan",
+      "Paraguay",
+      "Peru",
+      "Panama",
+      "Philippines",
+      "Poland",
+      "Portugal",
+      "Russia",
+      "Rwanda",
+      "Saudi Arabia",
+      "South Africa",
+      "Spain",
+      "South Korea",
+      "Sweden",
+      "Switzerland",
+      "Taiwan",
+      "Thailand",
+      "Turkey",
+      "Ukraine",
+      "United Arab Emirates",
+      "United Kingdom",
+      "United States",
+      "Uruguay",
+      "Venezuela",
+      "Vietnam",
+      "Zimbabwe",
+      "Austria"
+    ]
+  </script>
+  <script id="17" type="module">
+    const query = `
+    WITH regiones as (SELECT Entity, "World regions according to OWID" as region FROM meatData WHERE NOT "World regions according to OWID" ISNULL)
+
+
+    SELECT meatData.Entity, Code, meatData.Year,  "Meat, total | 00002943 || Food available for consumption | 0645pc || kilograms per year per capita" as consumption, "GDP per capita, PPP (constant 2021 international $)" as gptpc,
+      regiones.region
+
+    FROM meatData
+    INNER JOIN regiones ON
+    meatData.Entity = regiones.Entity
+    `
+
+    const data = [... await db.query(query)]
+  </script>
+  <script id="11" type="module">
+    const db = DuckDBClient.of({
+      meatData: "https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=false"
+    });
+  </script>
+</notebook>
