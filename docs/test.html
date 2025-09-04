@@ -1,25 +1,42 @@
 <!doctype html>
 <notebook theme="glacier">
   <title>Untitled</title>
-  <script id="3" type="module" pinned="">
-    data
+  <script id="11" type="module">
+    Plot.plot({
+      marginLeft:100,
+      marks:[
+        Plot.ruleY([6000000]),
+        Plot.lineY(dataEmpleo,
+         {
+          x:"ano_trimestre",
+          y:"chilenos",
+                 stroke:d =>"chilenos"
+
+         }
+        ),
+        Plot.dot(dataEmpleo,
+         {
+          x:"ano_trimestre",
+          y:"chilenos",
+          fill:d =>"chilenos"
+         }
+        ),
+      ]
+    })
   </script>
-  <script id="1" type="application/sql" database="var:db" output="data">
-    SELECT *
-    FROM meatData
-  </script>
-  <script id="2" type="module" pinned="">
-    const db = DuckDBClient.of({
-      meatData: "https://ourworldindata.org/grapher/meat-consumption-vs-gdp-per-capita.csv?v=1&csvType=full&useColumnShortNames=false"
-    });
-  </script>
-  <script id="7" type="module" pinned="">
-    dataEmpleo
-  </script>
-  <script id="5" type="application/sql" database="duckdb" output="dataEmpleo">
-    SELECT ano_trimestre, mes_central, count(*)
+  <script id="5" type="application/sql" hidden="" database="duckdb" output="dataEmpleo">
+    SELECT ano_trimestre, mes_central,
+      sum(fact_cal) as personas,
+      sum(CASE WHEN cae_especifico BETWEEN 1 AND 7 THEN fact_cal ELSE 0 END) as ocupados,
+      sum(CASE WHEN nacionalidad = 152 AND cae_especifico BETWEEN 1 AND 7 THEN fact_cal ELSE 0 END) as chilenos,
+      sum(CASE WHEN nacionalidad <> 152 AND cae_especifico BETWEEN 1 AND 7 THEN fact_cal ELSE 0 END) as extrajeros,
     FROM read_parquet("ene-01-def.parquet")
     GROUP BY ano_trimestre, mes_central
+  </script>
+  <script id="8" type="application/sql" hidden="" database="duckdb">
+    SELECT *
+    FROM read_parquet("ene-01-def.parquet")
+    LIMIT 10
 
 
   </script>

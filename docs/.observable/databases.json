@@ -9,12 +9,8 @@
     "warehouse": "demo",
     "password": "opensesame"
   },
-  {
-    "test": {
-        "type": "duckdb",
-        "path": "test.db"
-    }
-
-
-  
+  "test": {
+      "type": "duckdb",
+      "path": "test.db"
+  }
 }
